@@ -1,12 +1,26 @@
+// ignore_for_file: avoid_print
 import 'package:sacco/sacco.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
 
-void walletTest() async {
+Future<String> createAccount() async {
+  // Step 1: Attempt to fetch WebAuth credentials for the current user.
+  const url = 'http://localhost:8081/v1/auth/register/start/test';
+  try {
+    final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: "sacco");
+    print(result);
+    return result;
+  } on PlatformException catch (e) {
+    print(e);
+  }
+
+  // Step 2: Create a new account.
   // -----------------------------------
   // --- Creating a wallet
   // -----------------------------------
 
   final networkInfo = NetworkInfo(
-    bech32Hrp: 'did:com:',
+    bech32Hrp: 'did:snr:',
     lcdUrl: Uri.parse('http://localhost:1337'),
   );
 
@@ -56,4 +70,5 @@ void walletTest() async {
   } else {
     print('Tx send error: ${result.error?.errorMessage}');
   }
+  return "";
 }

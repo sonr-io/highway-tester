@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'src/pages/register_page.dart';
-import 'src/styles/colors.dart';
-import 'src/styles/text_styles.dart';
-import 'src/styles/theme.dart';
+import 'colors.dart';
+import 'text_styles.dart';
 
-void main() {
-  runApp(MaterialApp(
-    theme: ThemeData(
+var kNebulaTheme = ThemeData(
       // Define the default brightness and colors.
+      brightness: Brightness.dark,
       primaryColor: AppColors.primaryDark,
       primaryColorLight: AppColors.primaryLight,
       primaryColorDark: AppColors.primaryDark,
@@ -33,7 +30,4 @@ void main() {
         bodyText2: AppTextStyles.richTextParagraphSmall,
       ),
       colorScheme: ColorScheme.fromSwatch().copyWith(secondary: AppColors.secondary1),
-    ),
-    home: const RegisterPage(),
-  ));
-}
+);

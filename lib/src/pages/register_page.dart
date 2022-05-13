@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 
-import '../../api/webauthn_client.dart';
+import '../api/webauthn_server.dart';
+import '../styles/colors.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -28,7 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void authenticate() async {
-    const url = 'http://localtest.me:43823/';
+    const url = 'http://localtest.me:8081/v1/auth/register/start/test';
     const callbackUrlScheme = 'foobar';
 
     try {
@@ -45,25 +46,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Web Auth example'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Status: $_status\n'),
-              const SizedBox(height: 80),
-              ElevatedButton(
-                child: const Text('Authenticate'),
-                onPressed: () {
-                  authenticate();
-                },
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Web Auth example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Status: $_status\n', style: Theme.of(context).textTheme.headline3?.copyWith(color: AppColors.neutral100)),
+            const SizedBox(height: 80),
+            ElevatedButton(
+              child: const Text('Authenticate'),
+              onPressed: () {
+                authenticate();
+              },
+            ),
+          ],
         ),
       ),
     );
