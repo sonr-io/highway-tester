@@ -1,0 +1,13 @@
+{
+  "workspaceId": "1994",
+  "designSystemId": "14240",
+  "designSystemVersionId": "14520",
+  "brandId": "13936",
+  "exporterId": "14",
+  "workspaceName": "Sonr Team",
+  "designSystemName": "Nebula by Sonr",
+  "designSystemVersionName": "Shared draft",
+  "exporterName": "Flutter",
+  "write_to": "lib/src/styles/",
+  "description": "Note to our fellow developers: Install Supernova integration from the VSCode marketplace and then our  Flutter exporter will synchronize design data and generate appropriate code from the  Shared draft design system every time you request it through the extension interface, fully automatically."
+}
