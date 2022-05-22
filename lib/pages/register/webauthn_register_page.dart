@@ -1,46 +1,42 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_void_async
+import 'dart:async';
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:starport_template/api/webauthn_server.dart';
-import 'package:starport_template/styles/colors.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class WebauthnRegisterPage extends StatefulWidget {
+  const WebauthnRegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _WebauthnRegisterPageState createState() => _WebauthnRegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  String _status = '';
+class _WebauthnRegisterPageState extends State<WebauthnRegisterPage> {
+  Future<void> openBrowserTab() async {
+    await FlutterWebBrowser.openWebPage(url: 'http://localtest.me:8080/');
+  }
+
+  final List<BrowserEvent> _events = [];
+
+  StreamSubscription<BrowserEvent>? _browserEvents;
 
   @override
   void initState() {
     super.initState();
 
-    // Check if platform is web
-    if (!kIsWeb) {
-      startServer();
-    }
+    _browserEvents = FlutterWebBrowser.events().listen((event) {
+      setState(() {
+        _events.add(event);
+      });
+    });
   }
 
-  void authenticate() async {
-    const url = 'http://localhost:8081/v1/auth/register/start/test';
-    const callbackUrlScheme = 'foobar';
+  @override
+  void dispose() {
+    _browserEvents?.cancel();
 
-    try {
-      final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: callbackUrlScheme, preferEphemeral: true);
-      setState(() {
-        _status = 'Got result: $result';
-      });
-    } on PlatformException catch (e) {
-      setState(() {
-        _status = 'Got error: $e';
-      });
-    }
+    super.dispose();
   }
 
   @override
@@ -50,16 +46,67 @@ class _RegisterPageState extends State<RegisterPage> {
         title: const Text('Web Auth example'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Status: $_status\n', style: Theme.of(context).textTheme.headline3?.copyWith(color: AppColors.neutral100)),
-            const SizedBox(height: 80),
-            ElevatedButton(
-              onPressed: authenticate,
-              child: const Text('Authenticate'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (Platform.isAndroid) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    FlutterWebBrowser.openWebPage(
+                      url: 'http://localtest.me:8080/',
+                      customTabsOptions: const CustomTabsOptions(
+                        colorScheme: CustomTabsColorScheme.dark,
+                        darkColorSchemeParams: CustomTabsColorSchemeParams(
+                          toolbarColor: Colors.deepPurple,
+                          secondaryToolbarColor: Colors.green,
+                          navigationBarColor: Colors.amber,
+                          navigationBarDividerColor: Colors.cyan,
+                        ),
+                        shareState: CustomTabsShareState.on,
+                        instantAppsEnabled: true,
+                        showTitle: true,
+                        urlBarHidingEnabled: true,
+                      ),
+                    );
+                  },
+                  child: const Text('Open Localhost Webauthn'),
+                ),
+              ],
+              if (Platform.isIOS) ...[
+                ElevatedButton(
+                  onPressed: () {
+                    FlutterWebBrowser.openWebPage(
+                      url: 'http://localtest.me:8080/',
+                      safariVCOptions: const SafariViewControllerOptions(
+                        barCollapsingEnabled: true,
+                        preferredBarTintColor: Colors.green,
+                        preferredControlTintColor: Colors.amber,
+                        dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
+                        modalPresentationCapturesStatusBarAppearance: true,
+                        modalPresentationStyle: UIModalPresentationStyle.popover,
+                      ),
+                    );
+                  },
+                  child: const Text('Open Localhost Webauthn'),
+                ),
+                const Divider(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _events.map((e) {
+                    if (e is RedirectEvent) {
+                      return Text('redirect: ${e.url}');
+                    }
+                    if (e is CloseEvent) {
+                      return const Text('closed');
+                    }
+
+                    return Text('Unknown event: $e');
+                  }).toList(),
+                ),
+              ]
+            ],
+          ),
         ),
       ),
     );
