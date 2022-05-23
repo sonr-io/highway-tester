@@ -12,6 +12,7 @@ import 'package:starport_template/pages/assets/select_asset_page.dart';
 import 'package:starport_template/pages/wallet/receive_money_sheet.dart';
 import 'package:starport_template/pages/wallet/transaction_history_page.dart';
 import 'package:starport_template/starport_app.dart';
+import 'package:starport_template/styles/colors.dart';
 import 'package:starport_template/widgets/asset_portfolio_heading.dart';
 import 'package:starport_template/widgets/balance_card_list.dart';
 import 'package:starport_template/widgets/starport_button_bar.dart';
@@ -40,6 +41,24 @@ class _AssetsPortfolioPageState extends State<AssetsPortfolioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        shadowColor: Colors.transparent,
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.play_circle),
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              builder: (context) => SizedBox(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: Container(
+                  color: AppColors.primaryDark,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: Observer(

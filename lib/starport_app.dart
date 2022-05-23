@@ -4,10 +4,12 @@ import 'package:cosmos_ui_components/cosmos_theme.dart';
 import 'package:cosmos_utils/cosmos_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:starport_template/app_config.dart';
-import 'package:starport_template/pages/register/webauthn_register_page.dart';
+import 'package:starport_template/pages/register/label_device_page.dart';
+import 'package:starport_template/pages/routing_page.dart';
 import 'package:starport_template/stores/accounts_store.dart';
 import 'package:starport_template/stores/settings_store.dart';
 import 'package:starport_template/stores/transactions_store.dart';
+import 'package:starport_template/styles/theme.dart';
 import 'package:transaction_signing_gateway/gateway/transaction_signing_gateway.dart';
 
 class StarportApp extends StatelessWidget {
@@ -28,10 +30,10 @@ class StarportApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CosmosTheme(
       child: MaterialApp(
-        title: 'Starport template',
+        title: 'Sonr Tester',
         //darkTheme: CosmosTheme.buildDarkAppTheme(), // enable for dark mode
-        theme: CosmosTheme.buildAppTheme(),
-        home: const WebauthnRegisterPage(),
+        theme: NebulaTheme.buildAppTheme(),
+        home: const LabelDevicePage(),
       ),
     );
   }
