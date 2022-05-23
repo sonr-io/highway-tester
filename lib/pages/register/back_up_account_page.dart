@@ -9,9 +9,11 @@ import 'package:starport_template/widgets/copy_to_clipboard_button.dart';
 class BackUpAccountPage extends StatefulWidget {
   const BackUpAccountPage({
     required this.mnemonic,
+    required this.accountName,
     Key? key,
   }) : super(key: key);
 
+  final String accountName;
   final String mnemonic;
 
   @override
@@ -21,6 +23,7 @@ class BackUpAccountPage extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('mnemonic', mnemonic));
+    properties.add(StringProperty('accountName', accountName));
   }
 }
 
@@ -90,8 +93,7 @@ class _BackUpAccountPageState extends State<BackUpAccountPage> {
             ),
             SizedBox(height: CosmosTheme.of(context).spacingM),
             CosmosCheckboxTile(
-              text:
-                  'I have backed up my recovery phrase, I understand that if I lose my recovery phrase, I will lose my fund',
+              text: 'I have backed up my recovery phrase, I understand that if I lose my recovery phrase, I will lose my fund',
               onTap: _onTapConfirmCheckbox,
               checked: _confirmChecked,
             ),
@@ -109,7 +111,7 @@ class _BackUpAccountPageState extends State<BackUpAccountPage> {
 
   void _onTapContinue() => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => RepeatMnemonicPage(mnemonic: widget.mnemonic),
+          builder: (context) => RepeatMnemonicPage(mnemonic: widget.mnemonic, accountName: widget.accountName),
         ),
       );
 

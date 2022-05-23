@@ -8,6 +8,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:starport_template/pages/account/account_name_page.dart';
 import 'package:starport_template/pages/register/create_account_page.dart';
 import 'package:starport_template/pages/register/import_account_page.dart';
+import 'package:starport_template/pages/register/label_device_page.dart';
 import 'package:starport_template/starport_app.dart';
 import 'package:transaction_signing_gateway/transaction_signing_gateway.dart';
 
@@ -89,7 +90,7 @@ class _AccountsListSheetState extends State<AccountsListSheet> {
   }
 
   void _onTapCreateAccount() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CreateAccountPage()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LabelDevicePage()));
   }
 
   void _onTapImportAccount() {

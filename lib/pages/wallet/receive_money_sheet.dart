@@ -78,7 +78,7 @@ class ReceiveMoneySheet extends StatelessWidget {
                       onTap: _onTapCopyAddress,
                       text: 'Copy address',
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

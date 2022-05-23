@@ -3,8 +3,9 @@ import 'package:cosmos_auth/auth/cosmos_auth.dart';
 import 'package:cosmos_ui_components/cosmos_theme.dart';
 import 'package:cosmos_utils/cosmos_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starport_template/api/blockchain_connect.dart';
 import 'package:starport_template/app_config.dart';
-import 'package:starport_template/pages/register/label_device_page.dart';
 import 'package:starport_template/pages/routing_page.dart';
 import 'package:starport_template/stores/accounts_store.dart';
 import 'package:starport_template/stores/settings_store.dart';
@@ -28,12 +29,17 @@ class StarportApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(BlockchainClient());
     return CosmosTheme(
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Sonr Tester',
         //darkTheme: CosmosTheme.buildDarkAppTheme(), // enable for dark mode
         theme: NebulaTheme.buildAppTheme(),
-        home: const LabelDevicePage(),
+        home: const RoutingPage(),
+        navigatorKey: Get.key,
+        navigatorObservers: [
+          GetObserver(),
+        ],
       ),
     );
   }

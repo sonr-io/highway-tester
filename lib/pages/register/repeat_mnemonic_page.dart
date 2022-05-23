@@ -2,6 +2,8 @@ import 'package:cosmos_ui_components/cosmos_ui_components.dart';
 import 'package:cosmos_utils/cosmos_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:starport_template/api/blockchain_connect.dart';
 import 'package:starport_template/entities/account_additional_data.dart';
 import 'package:starport_template/entities/import_account_form_data.dart';
 import 'package:starport_template/pages/account/passcode_prompt_page.dart';
@@ -12,10 +14,12 @@ import 'package:starport_template/widgets/loading_splash.dart';
 class RepeatMnemonicPage extends StatefulWidget {
   const RepeatMnemonicPage({
     required this.mnemonic,
+    required this.accountName,
     Key? key,
   }) : super(key: key);
 
   final String mnemonic;
+  final String accountName;
 
   @override
   State<RepeatMnemonicPage> createState() => _RepeatMnemonicPageState();
@@ -24,6 +28,7 @@ class RepeatMnemonicPage extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('mnemonic', mnemonic));
+    properties.add(StringProperty('accountName', accountName));
   }
 }
 
@@ -40,6 +45,9 @@ class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
 
   @override
   void initState() {
+    if (kDebugMode) {
+      _onTapCreateAccount();
+    }
     super.initState();
     _selectedWords = [];
   }
@@ -78,6 +86,7 @@ class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
   void _onTapAdvanced() => notImplemented(context);
 
   Widget _contentUI() {
+    final sortedAlphaMnemonicWords = _mnemonicWords.toList()..sort();
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -93,7 +102,7 @@ class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     CosmosMnemonicConfirmView(
-                      mnemonicWords: _mnemonicWords,
+                      mnemonicWords: sortedAlphaMnemonicWords,
                       onSelectedWordsChanged: _selectedWordsChanged,
                     )
                   ],
@@ -126,9 +135,9 @@ class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
     if (password == null) {
       return;
     }
-    await StarportApp.accountsStore.importAlanAccount(
+    final info = await StarportApp.accountsStore.importAlanAccount(
       ImportAccountFormData(
-        name: 'Account ${StarportApp.accountsStore.accounts.length}',
+        name: widget.accountName,
         password: password,
         mnemonic: widget.mnemonic,
         additionalData: AccountAdditionalData(isBackedUp: true),
@@ -140,6 +149,8 @@ class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
       return;
     }
     if (!_isError) {
+      await BlockchainClient.to.fetchTokens(address: info?.publicAddress);
+      // ignore: use_build_context_synchronously
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const AssetsPortfolioPage()),
         (route) => false,

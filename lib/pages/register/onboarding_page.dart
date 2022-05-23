@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:starport_template/pages/register/create_account_page.dart';
 import 'package:starport_template/pages/register/import_account_page.dart';
+import 'package:starport_template/pages/register/label_device_page.dart';
 import 'package:starport_template/starport_app.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -79,7 +80,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _onTapCreateAccount() => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const CreateAccountPage()),
+        MaterialPageRoute(builder: (_) => const LabelDevicePage()),
       );
 
   void _onTapImportAccount() => Navigator.of(context).push(

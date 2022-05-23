@@ -10,44 +10,44 @@ class LabelDevicePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inputVal = ''.obs;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Label Device'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => goBack(context),
+    return ObxValue<RxString>(
+      (data) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Label Device'),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => goBack(context),
+              ),
+              label: 'Cancel',
             ),
-            label: 'Back',
-          ),
-          BottomNavigationBarItem(
-            icon: IconButton(
-              icon: const Icon(Icons.arrow_forward),
-              onPressed: () => goForward(context),
+            BottomNavigationBarItem(
+              icon: IconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onPressed: () => goForward(context, data.value),
+              ),
+              label: 'Next',
             ),
-            label: 'Continue',
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Text('Name your device something memorable.'),
-          ObxValue<RxString>(
-            (data) => TextField(
+          ],
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Text('Name your device something memorable.'),
+            TextField(
               controller: TextEditingController(text: data.value),
               decoration: const InputDecoration(
                 labelText: 'Device Name',
               ),
+              onChanged: (v) => data(v),
             ),
-            inputVal,
-          ),
-        ],
+          ],
+        ),
       ),
+      ''.obs,
     );
   }
 
@@ -58,7 +58,7 @@ class LabelDevicePage extends StatelessWidget {
   }
 
   // ignore: avoid_void_async
-  Future<String> goForward(BuildContext context) async {
+  Future<String> goForward(BuildContext context, String accountName) async {
     // ignore: omit_local_variable_types
     final bool authAvailable = await FlutterBiometrics().authAvailable;
     if (authAvailable) {
@@ -71,7 +71,11 @@ class LabelDevicePage extends StatelessWidget {
 
     // ignore: use_build_context_synchronously
     await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const CreateAccountPage()),
+      MaterialPageRoute(
+        builder: (_) => CreateAccountPage(
+          accountName: accountName,
+        ),
+      ),
     );
     return '';
   }

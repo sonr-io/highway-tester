@@ -13,7 +13,12 @@ import 'package:starport_template/starport_app.dart';
 import 'package:starport_template/widgets/loading_splash.dart';
 
 class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({Key? key}) : super(key: key);
+  CreateAccountPage({
+    required this.accountName,
+    Key? key,
+  }) : super(key: key);
+
+  final String accountName;
 
   @override
   State<CreateAccountPage> createState() => _CreateAccountPageState();
@@ -24,15 +29,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   String? _mnemonic;
 
-  bool get isLoading =>
-      _isAuthenticated == null ||
-      StarportApp.accountsStore.isMnemonicCreating ||
-      StarportApp.accountsStore.isAccountImporting;
+  bool get isLoading => _isAuthenticated == null || StarportApp.accountsStore.isMnemonicCreating || StarportApp.accountsStore.isAccountImporting;
 
   bool get isError =>
-      !(_isAuthenticated ?? true) ||
-      StarportApp.accountsStore.isMnemonicCreatingError ||
-      StarportApp.accountsStore.isAccountImportingError;
+      !(_isAuthenticated ?? true) || StarportApp.accountsStore.isMnemonicCreatingError || StarportApp.accountsStore.isAccountImportingError;
 
   bool get isAuthenticating => _isAuthenticated == null;
 
@@ -58,9 +58,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         errorChild: _errorUI(),
         isError: isError,
         loadingChild: LoadingSplash(
-          text: isAuthenticating
-              ? 'Authenticating..'
-              : (isMnemonicCreating ? 'Creating a recovery phrase..' : 'Creating account..'),
+          text: isAuthenticating ? 'Authenticating..' : (isMnemonicCreating ? 'Creating a recovery phrase..' : 'Creating account..'),
         ),
         contentChild: Scaffold(
           body: _contentUI(),
@@ -73,7 +71,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   CosmosAppBar _appBar() {
     return CosmosAppBar(
       leading: const CosmosBackButton(),
-      title: 'Back up your account',
+      title: 'Back up ${widget.accountName} account',
       actions: [
         CosmosAppBarAction(
           onTap: _onTapAdvanced,
@@ -146,7 +144,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     }
     if (mounted) {
       await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => BackUpAccountPage(mnemonic: mnemonic)),
+        MaterialPageRoute(builder: (context) => BackUpAccountPage(mnemonic: mnemonic, accountName: widget.accountName)),
       );
     }
   }
