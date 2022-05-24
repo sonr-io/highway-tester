@@ -1,9 +1,9 @@
-export 'client/gogoproto/gogo.pbjson.dart';
-export 'client/gogoproto/gogo.pb.dart';
-export 'client/gogoproto/gogo.pbenum.dart';
 export 'client/cosmos_proto/cosmos.pbenum.dart';
 export 'client/cosmos_proto/cosmos.pb.dart';
 export 'client/cosmos_proto/cosmos.pbjson.dart';
+export 'client/gogoproto/gogo.pbjson.dart';
+export 'client/gogoproto/gogo.pb.dart';
+export 'client/gogoproto/gogo.pbenum.dart';
 export 'client/google/api/annotations.pbjson.dart';
 export 'client/google/api/http.pbjson.dart';
 export 'client/google/api/annotations.pb.dart';

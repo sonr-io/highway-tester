@@ -10,6 +10,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'did.pb.dart' as $2;
+
 import 'who_is.pbenum.dart';
 
 export 'who_is.pbenum.dart';
@@ -18,7 +20,7 @@ class WhoIs extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'WhoIs', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'sonrio.sonr.registry'), createEmptyInstance: create)
     ..pc<Alias>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'alias', $pb.PbFieldType.PM, subBuilder: Alias.create)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'owner')
-    ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'didDocument', $pb.PbFieldType.OY)
+    ..aOM<$2.DIDDocument>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'didDocument', subBuilder: $2.DIDDocument.create)
     ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'controllers')
     ..e<WhoIsType>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: WhoIsType.USER, valueOf: WhoIsType.valueOf, enumValues: WhoIsType.values)
     ..aInt64(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
@@ -30,7 +32,7 @@ class WhoIs extends $pb.GeneratedMessage {
   factory WhoIs({
     $core.Iterable<Alias>? alias,
     $core.String? owner,
-    $core.List<$core.int>? didDocument,
+    $2.DIDDocument? didDocument,
     $core.Iterable<$core.String>? controllers,
     WhoIsType? type,
     $fixnum.Int64? timestamp,
@@ -94,13 +96,15 @@ class WhoIs extends $pb.GeneratedMessage {
   void clearOwner() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$core.int> get didDocument => $_getN(2);
+  $2.DIDDocument get didDocument => $_getN(2);
   @$pb.TagNumber(3)
-  set didDocument($core.List<$core.int> v) { $_setBytes(2, v); }
+  set didDocument($2.DIDDocument v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasDidDocument() => $_has(2);
   @$pb.TagNumber(3)
   void clearDidDocument() => clearField(3);
+  @$pb.TagNumber(3)
+  $2.DIDDocument ensureDidDocument() => $_ensure(2);
 
   @$pb.TagNumber(4)
   $core.List<$core.String> get controllers => $_getList(3);

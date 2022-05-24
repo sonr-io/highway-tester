@@ -25,7 +25,7 @@ const WhoIs$json = const {
   '2': const [
     const {'1': 'alias', '3': 1, '4': 3, '5': 11, '6': '.sonrio.sonr.registry.Alias', '10': 'alias'},
     const {'1': 'owner', '3': 2, '4': 1, '5': 9, '10': 'owner'},
-    const {'1': 'did_document', '3': 3, '4': 1, '5': 12, '10': 'didDocument'},
+    const {'1': 'did_document', '3': 3, '4': 1, '5': 11, '6': '.sonrio.sonr.registry.DIDDocument', '10': 'didDocument'},
     const {'1': 'controllers', '3': 4, '4': 3, '5': 9, '10': 'controllers'},
     const {'1': 'type', '3': 5, '4': 1, '5': 14, '6': '.sonrio.sonr.registry.WhoIsType', '10': 'type'},
     const {'1': 'timestamp', '3': 6, '4': 1, '5': 3, '10': 'timestamp'},
@@ -34,7 +34,7 @@ const WhoIs$json = const {
 };
 
 /// Descriptor for `WhoIs`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List whoIsDescriptor = $convert.base64Decode('CgVXaG9JcxIxCgVhbGlhcxgBIAMoCzIbLnNvbnJpby5zb25yLnJlZ2lzdHJ5LkFsaWFzUgVhbGlhcxIUCgVvd25lchgCIAEoCVIFb3duZXISIQoMZGlkX2RvY3VtZW50GAMgASgMUgtkaWREb2N1bWVudBIgCgtjb250cm9sbGVycxgEIAMoCVILY29udHJvbGxlcnMSMwoEdHlwZRgFIAEoDjIfLnNvbnJpby5zb25yLnJlZ2lzdHJ5Lldob0lzVHlwZVIEdHlwZRIcCgl0aW1lc3RhbXAYBiABKANSCXRpbWVzdGFtcBIbCglpc19hY3RpdmUYByABKAhSCGlzQWN0aXZl');
+final $typed_data.Uint8List whoIsDescriptor = $convert.base64Decode('CgVXaG9JcxIxCgVhbGlhcxgBIAMoCzIbLnNvbnJpby5zb25yLnJlZ2lzdHJ5LkFsaWFzUgVhbGlhcxIUCgVvd25lchgCIAEoCVIFb3duZXISRAoMZGlkX2RvY3VtZW50GAMgASgLMiEuc29ucmlvLnNvbnIucmVnaXN0cnkuRElERG9jdW1lbnRSC2RpZERvY3VtZW50EiAKC2NvbnRyb2xsZXJzGAQgAygJUgtjb250cm9sbGVycxIzCgR0eXBlGAUgASgOMh8uc29ucmlvLnNvbnIucmVnaXN0cnkuV2hvSXNUeXBlUgR0eXBlEhwKCXRpbWVzdGFtcBgGIAEoA1IJdGltZXN0YW1wEhsKCWlzX2FjdGl2ZRgHIAEoCFIIaXNBY3RpdmU=');
 @$core.Deprecated('Use aliasDescriptor instead')
 const Alias$json = const {
   '1': 'Alias',

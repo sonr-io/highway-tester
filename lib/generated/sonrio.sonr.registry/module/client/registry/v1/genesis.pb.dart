@@ -10,23 +10,23 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'params.pb.dart' as $2;
-import 'who_is.pb.dart' as $3;
+import 'params.pb.dart' as $3;
+import 'who_is.pb.dart' as $4;
 
 class GenesisState extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GenesisState', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'sonrio.sonr.registry'), createEmptyInstance: create)
-    ..aOM<$2.Params>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'params', subBuilder: $2.Params.create)
+    ..aOM<$3.Params>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'params', subBuilder: $3.Params.create)
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'portId')
-    ..pc<$3.WhoIs>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'whoIsList', $pb.PbFieldType.PM, protoName: 'whoIsList', subBuilder: $3.WhoIs.create)
+    ..pc<$4.WhoIs>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'whoIsList', $pb.PbFieldType.PM, protoName: 'whoIsList', subBuilder: $4.WhoIs.create)
     ..a<$fixnum.Int64>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'whoIsCount', $pb.PbFieldType.OU6, protoName: 'whoIsCount', defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false
   ;
 
   GenesisState._() : super();
   factory GenesisState({
-    $2.Params? params,
+    $3.Params? params,
     $core.String? portId,
-    $core.Iterable<$3.WhoIs>? whoIsList,
+    $core.Iterable<$4.WhoIs>? whoIsList,
     $fixnum.Int64? whoIsCount,
   }) {
     final _result = create();
@@ -66,15 +66,15 @@ class GenesisState extends $pb.GeneratedMessage {
   static GenesisState? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.Params get params => $_getN(0);
+  $3.Params get params => $_getN(0);
   @$pb.TagNumber(1)
-  set params($2.Params v) { setField(1, v); }
+  set params($3.Params v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasParams() => $_has(0);
   @$pb.TagNumber(1)
   void clearParams() => clearField(1);
   @$pb.TagNumber(1)
-  $2.Params ensureParams() => $_ensure(0);
+  $3.Params ensureParams() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get portId => $_getSZ(1);
@@ -86,7 +86,7 @@ class GenesisState extends $pb.GeneratedMessage {
   void clearPortId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.List<$3.WhoIs> get whoIsList => $_getList(2);
+  $core.List<$4.WhoIs> get whoIsList => $_getList(2);
 
   @$pb.TagNumber(4)
   $fixnum.Int64 get whoIsCount => $_getI64(3);

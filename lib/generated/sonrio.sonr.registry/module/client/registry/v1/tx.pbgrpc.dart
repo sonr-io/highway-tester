@@ -26,9 +26,9 @@ class MsgClient extends $grpc.Client {
           ($1.MsgUpdateWhoIs value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $1.MsgUpdateWhoIsResponse.fromBuffer(value));
-  static final _$deleteWhoIs =
+  static final _$deactivateWhoIs =
       $grpc.ClientMethod<$1.MsgDeactivateWhoIs, $1.MsgDeactivateWhoIsResponse>(
-          '/sonrio.sonr.registry.Msg/DeleteWhoIs',
+          '/sonrio.sonr.registry.Msg/DeactivateWhoIs',
           ($1.MsgDeactivateWhoIs value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $1.MsgDeactivateWhoIsResponse.fromBuffer(value));
@@ -68,10 +68,10 @@ class MsgClient extends $grpc.Client {
     return $createUnaryCall(_$updateWhoIs, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.MsgDeactivateWhoIsResponse> deleteWhoIs(
+  $grpc.ResponseFuture<$1.MsgDeactivateWhoIsResponse> deactivateWhoIs(
       $1.MsgDeactivateWhoIs request,
       {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$deleteWhoIs, request, options: options);
+    return $createUnaryCall(_$deactivateWhoIs, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.MsgBuyAliasResponse> buyAlias($1.MsgBuyAlias request,
@@ -116,8 +116,8 @@ abstract class MsgServiceBase extends $grpc.Service {
             ($1.MsgUpdateWhoIsResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.MsgDeactivateWhoIs,
             $1.MsgDeactivateWhoIsResponse>(
-        'DeleteWhoIs',
-        deleteWhoIs_Pre,
+        'DeactivateWhoIs',
+        deactivateWhoIs_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
@@ -158,10 +158,10 @@ abstract class MsgServiceBase extends $grpc.Service {
     return updateWhoIs(call, await request);
   }
 
-  $async.Future<$1.MsgDeactivateWhoIsResponse> deleteWhoIs_Pre(
+  $async.Future<$1.MsgDeactivateWhoIsResponse> deactivateWhoIs_Pre(
       $grpc.ServiceCall call,
       $async.Future<$1.MsgDeactivateWhoIs> request) async {
-    return deleteWhoIs(call, await request);
+    return deactivateWhoIs(call, await request);
   }
 
   $async.Future<$1.MsgBuyAliasResponse> buyAlias_Pre(
@@ -184,7 +184,7 @@ abstract class MsgServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $1.MsgCreateWhoIs request);
   $async.Future<$1.MsgUpdateWhoIsResponse> updateWhoIs(
       $grpc.ServiceCall call, $1.MsgUpdateWhoIs request);
-  $async.Future<$1.MsgDeactivateWhoIsResponse> deleteWhoIs(
+  $async.Future<$1.MsgDeactivateWhoIsResponse> deactivateWhoIs(
       $grpc.ServiceCall call, $1.MsgDeactivateWhoIs request);
   $async.Future<$1.MsgBuyAliasResponse> buyAlias(
       $grpc.ServiceCall call, $1.MsgBuyAlias request);
