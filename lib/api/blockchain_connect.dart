@@ -14,16 +14,10 @@ class BlockchainClient extends GetConnect {
   AccountPublicInfo get selectedAccount => StarportApp.accountsStore.selectedAccount;
 
   // Creates a new WhoIs instance on the Sonr Blockchain Registry Module
-  Future<Response> createWhoIs(Map data) async {
-    final msgCreateWhoIs = MsgCreateWhoIs(
-      creator: selectedAccount.publicAddress,
-      didDocument: List.empty(),
-      whoisType: WhoIsType.USER,
-    );
-
+  Future<Response> createWhoIs(MsgCreateWhoIs req) async {
     // Marshal JSON
-    final json = msgCreateWhoIs.writeToJson();
-    final resp = await post('http://youapi/users', json, contentType: 'application/json');
+    final json = req.writeToJson();
+    final resp = await post('$BlockchainAPIUrl/', json, contentType: 'application/json');
     return resp;
   }
 

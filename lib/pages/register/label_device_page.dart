@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biometrics/flutter_biometrics.dart';
 import 'package:get/get.dart';
+import 'package:starport_template/controllers/register_controller.dart';
 import 'package:starport_template/pages/register/create_account_page.dart';
 import 'package:starport_template/pages/routing_page.dart';
 
-class LabelDevicePage extends StatelessWidget {
+class LabelDevicePage extends GetView<RegisterController> {
   const LabelDevicePage({Key? key}) : super(key: key);
 
   @override
