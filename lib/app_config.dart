@@ -1,5 +1,11 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:alan/alan.dart';
+import 'package:get/get.dart';
 import 'package:grpc/grpc.dart';
+import 'package:starport_template/api/blockchain_connect.dart';
+import 'package:starport_template/controllers/account_controller.dart';
+import 'package:starport_template/controllers/registry_controller.dart';
 
 class AppConfig {
   AppConfig({
@@ -38,8 +44,7 @@ class AppConfig {
         grpcInfo: GRPCInfo(
           host: grpcUrl,
           port: int.parse(grpcPort),
-          credentials:
-              int.parse(grpcPort) == 443 ? const ChannelCredentials.secure() : const ChannelCredentials.insecure(),
+          credentials: int.parse(grpcPort) == 443 ? const ChannelCredentials.secure() : const ChannelCredentials.insecure(),
         ),
       );
 
@@ -57,5 +62,14 @@ class AppConfig {
       grpcPort: grpcPort ?? this.grpcPort,
       prefixAddress: prefixAddress ?? this.prefixAddress,
     );
+  }
+}
+
+class AppGetBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.put(BlockchainClient());
+    Get.lazyPut(() => AccountController());
+    Get.lazyPut(() => RegistryController());
   }
 }

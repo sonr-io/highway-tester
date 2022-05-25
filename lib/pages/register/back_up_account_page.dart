@@ -111,7 +111,7 @@ class _BackUpAccountPageState extends State<BackUpAccountPage> {
 
   void _onTapContinue() => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => RepeatMnemonicPage(mnemonic: widget.mnemonic, accountName: widget.accountName),
+          builder: (context) => RepeatMnemonicPage(),
         ),
       );
 

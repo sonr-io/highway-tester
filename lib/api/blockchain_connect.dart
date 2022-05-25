@@ -13,27 +13,6 @@ class BlockchainClient extends GetConnect {
 
   AccountPublicInfo get selectedAccount => StarportApp.accountsStore.selectedAccount;
 
-  // Creates a new WhoIs instance on the Sonr Blockchain Registry Module
-  Future<Response> createWhoIs(MsgCreateWhoIs req) async {
-    // Marshal JSON
-    final json = req.writeToJson();
-    final resp = await post('$BlockchainAPIUrl/', json, contentType: 'application/json');
-    return resp;
-  }
-
-  // Buys a new alias on the Sonr Blockchain Registry Module
-  Future<Response> buyAlias(String alias) async {
-    final msgBuyAlias = MsgBuyAlias(
-      creator: selectedAccount.publicAddress,
-      name: alias,
-    );
-
-    // Marshal JSON
-    final json = msgBuyAlias.writeToJson();
-    final resp = await post('http://youapi/aliases', json, contentType: 'application/json');
-    return resp;
-  }
-
   // Fetches tokens from the faucet on the Sonr Blockchain API
   Future<Response> fetchTokens({String? address}) async {
     final recipient = address ?? selectedAccount.publicAddress;

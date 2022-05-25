@@ -9,10 +9,15 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:starport_template/entities/balance.dart';
 import 'package:starport_template/pages/account/accounts_list_sheet.dart';
 import 'package:starport_template/pages/assets/select_asset_page.dart';
+import 'package:starport_template/pages/modules/buckets_page.dart';
+import 'package:starport_template/pages/modules/channels_page.dart';
+import 'package:starport_template/pages/modules/objects_page.dart';
+import 'package:starport_template/pages/modules/registry_page.dart';
 import 'package:starport_template/pages/wallet/receive_money_sheet.dart';
 import 'package:starport_template/pages/wallet/transaction_history_page.dart';
 import 'package:starport_template/starport_app.dart';
 import 'package:starport_template/styles/colors.dart';
+import 'package:starport_template/styles/text_styles.dart';
 import 'package:starport_template/widgets/asset_portfolio_heading.dart';
 import 'package:starport_template/widgets/balance_card_list.dart';
 import 'package:starport_template/widgets/starport_button_bar.dart';
@@ -52,7 +57,35 @@ class _AssetsPortfolioPageState extends State<AssetsPortfolioPage> {
               builder: (context) => SizedBox(
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: Container(
-                  color: AppColors.primaryDark,
+                  color: AppColors.neutral200,
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    itemBuilder: (context, index) => GridTile(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => _getPageFromBottomSheetIndex(index)),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.neutral700),
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.neutral800,
+                          ),
+                          margin: const EdgeInsets.all(24),
+                          alignment: Alignment.center,
+                          child: Text(
+                            _getTitleFromBottomSheetIndex(index),
+                            style: AppTextStyles.richTextHeading5.copyWith(
+                              color: AppColors.neutral100,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    itemCount: 4,
+                  ),
                 ),
               ),
             ),
@@ -148,6 +181,32 @@ class _AssetsPortfolioPageState extends State<AssetsPortfolioPage> {
         ),
       ),
     );
+  }
+
+  String _getTitleFromBottomSheetIndex(int i) {
+    switch (i) {
+      case 0:
+        return 'Registry';
+      case 1:
+        return 'Objects';
+      case 2:
+        return 'Buckets';
+      default:
+        return 'Channels';
+    }
+  }
+
+  Widget _getPageFromBottomSheetIndex(int i) {
+    switch (i) {
+      case 0:
+        return const RegistryPage();
+      case 1:
+        return const ObjectsPage();
+      case 2:
+        return const BucketsPage();
+      default:
+        return const ChannelsPage();
+    }
   }
 
   @override

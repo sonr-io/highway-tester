@@ -1,9 +1,11 @@
+import 'package:alan/alan.dart';
 import 'package:cosmos_ui_components/cosmos_ui_components.dart';
 import 'package:cosmos_utils/cosmos_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:starport_template/api/blockchain_connect.dart';
+import 'package:starport_template/controllers/account_controller.dart';
 import 'package:starport_template/entities/account_additional_data.dart';
 import 'package:starport_template/entities/import_account_form_data.dart';
 import 'package:starport_template/pages/account/passcode_prompt_page.dart';
@@ -11,150 +13,80 @@ import 'package:starport_template/pages/assets/assets_portfolio_page.dart';
 import 'package:starport_template/starport_app.dart';
 import 'package:starport_template/widgets/loading_splash.dart';
 
-class RepeatMnemonicPage extends StatefulWidget {
-  const RepeatMnemonicPage({
-    required this.mnemonic,
-    required this.accountName,
-    Key? key,
-  }) : super(key: key);
-
-  final String mnemonic;
-  final String accountName;
-
-  @override
-  State<RepeatMnemonicPage> createState() => _RepeatMnemonicPageState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('mnemonic', mnemonic));
-    properties.add(StringProperty('accountName', accountName));
-  }
-}
-
-class _RepeatMnemonicPageState extends State<RepeatMnemonicPage> {
-  late List<String> _selectedWords;
-
-  List<String> get _mnemonicWords => widget.mnemonic.splitToWords();
-
-  bool get _createButtonEnabled => listEquals(_mnemonicWords, _selectedWords);
+class RepeatMnemonicPage extends GetView<AccountController> {
+  List<String> get _mnemonicWords => controller.mnemonic.value.splitToWords();
 
   bool get _isLoading => StarportApp.accountsStore.isAccountImporting;
 
   bool get _isError => StarportApp.accountsStore.isAccountImportingError;
 
   @override
-  void initState() {
-    if (kDebugMode) {
-      _onTapCreateAccount();
-    }
-    super.initState();
-    _selectedWords = [];
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isValid = false.obs;
     return Material(
       child: ContentStateSwitcher(
         isError: _isError,
-        errorChild: _errorUI(),
+        errorChild: const Center(
+          child: Text('Error!'),
+        ),
         isLoading: _isLoading,
         loadingChild: const LoadingSplash(
           text: 'Creating account..',
         ),
         contentChild: Scaffold(
-          body: _contentUI(),
-          appBar: _appBar(),
-        ),
-      ),
-    );
-  }
-
-  CosmosAppBar _appBar() {
-    return CosmosAppBar(
-      leading: const CosmosBackButton(),
-      title: 'Confirm recovery phrase',
-      actions: [
-        CosmosAppBarAction(
-          onTap: _onTapAdvanced,
-          text: 'Advanced',
-        ),
-      ],
-    );
-  }
-
-  void _onTapAdvanced() => notImplemented(context);
-
-  Widget _contentUI() {
-    final sortedAlphaMnemonicWords = _mnemonicWords.toList()..sort();
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: CosmosTheme.of(context).spacingL,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: CosmosTheme.of(context).spacingM),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CosmosMnemonicConfirmView(
-                      mnemonicWords: sortedAlphaMnemonicWords,
-                      onSelectedWordsChanged: _selectedWordsChanged,
-                    )
-                  ],
-                ),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: CosmosTheme.of(context).spacingL,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: CosmosTheme.of(context).spacingM),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CosmosMnemonicConfirmView(
+                            mnemonicWords: _mnemonicWords,
+                            onSelectedWordsChanged: (vals) {
+                              //rd(vals);
+                              if (listEquals(vals, _mnemonicWords)) {
+                                isValid(true);
+                              } else {
+                                isValid(false);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: CosmosTheme.of(context).spacingM),
+                  ObxValue<RxBool>(
+                    (d) => CosmosElevatedButton(
+                      text: 'Create Account',
+                      onTap: () => d.value ? controller.createAccount(context) : null,
+                    ),
+                    isValid,
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: CosmosTheme.of(context).spacingM),
-            CosmosElevatedButton(
-              text: 'Create Account',
-              onTap: _createButtonEnabled ? _onTapCreateAccount : null,
-            )
-          ],
+          ),
+          appBar: CosmosAppBar(
+            leading: const CosmosBackButton(),
+            title: 'Confirm recovery phrase',
+            actions: [
+              CosmosAppBarAction(
+                onTap: () => notImplemented(context),
+                text: 'Advanced',
+              ),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  Widget _errorUI() {
-    return const Center(
-      child: Text('Error!'),
-    );
-  }
-
-  void _selectedWordsChanged(List<String> selectedWords) => setState(() {
-        _selectedWords = selectedWords;
-      });
-
-  Future<void> _onTapCreateAccount() async {
-    final password = await PasswordPromptPage.promptPassword(context);
-    if (password == null) {
-      return;
-    }
-    final info = await StarportApp.accountsStore.importAlanAccount(
-      ImportAccountFormData(
-        name: widget.accountName,
-        password: password,
-        mnemonic: widget.mnemonic,
-        additionalData: AccountAdditionalData(isBackedUp: true),
-      ),
-      onAccountCreationStarted: () => setState(() {}),
-    );
-    setState(() {});
-    if (!mounted) {
-      return;
-    }
-    if (!_isError) {
-      await BlockchainClient.to.fetchTokens(address: info?.publicAddress);
-      // ignore: use_build_context_synchronously
-      await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const AssetsPortfolioPage()),
-        (route) => false,
-      );
-    }
   }
 }

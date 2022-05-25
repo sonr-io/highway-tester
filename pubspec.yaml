@@ -61,6 +61,7 @@ dependencies:
   get: ^4.6.5
   flutter_biometrics: ^0.3.0
   fast_base58: ^0.2.1
+  adaptive_dialog: ^1.6.3
 
 dev_dependencies:
   flutter_test:
