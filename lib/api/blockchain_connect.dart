@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:starport_template/generated/sonrio.sonr.registry/module/export.dart';
 import 'package:starport_template/model/faucet_json.dart';
 import 'package:starport_template/starport_app.dart';
 import 'package:transaction_signing_gateway/model/account_public_info.dart';
@@ -10,7 +9,6 @@ const FaucetAPIUrl = 'http://localtest.me:4500/';
 
 class BlockchainClient extends GetConnect {
   static BlockchainClient get to => Get.find<BlockchainClient>();
-
   AccountPublicInfo get selectedAccount => StarportApp.accountsStore.selectedAccount;
 
   // Fetches tokens from the faucet on the Sonr Blockchain API

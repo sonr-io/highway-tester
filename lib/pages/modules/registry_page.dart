@@ -5,6 +5,7 @@ import 'package:alan/alan.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:starport_template/api/blockchain_connect.dart';
+import 'package:starport_template/controllers/did_service.dart';
 import 'package:starport_template/controllers/registry_controller.dart';
 import 'package:starport_template/generated/sonrio.sonr.registry/module/export.dart';
 
@@ -50,13 +51,45 @@ class _RegistryEndpoint extends StatelessWidget {
   void _onPressed(BuildContext context) async {
     switch (method) {
       case RegistryMethod.CreateWhoIs:
-        // TODO: Handle this case.
+        final result = await showOkCancelAlertDialog(
+          context: context,
+          title: 'Create WhoIs',
+          message: 'Continue to create new Credential to register new WhoIs?',
+          okLabel: 'Yes',
+          cancelLabel: 'Cancel',
+        );
+
+        if (result == OkCancelResult.ok) {
+          final doc = await DIDService.to.createNewDoc(withVm: true);
+          await RegistryController.to.createWhoIs(doc: doc, type: WhoIsType.USER);
+        }
         break;
       case RegistryMethod.UpdateWhoIs:
-        // TODO: Handle this case.
+        final result = await showOkCancelAlertDialog(
+          context: context,
+          title: 'Update WhoIs',
+          message: 'Continue to add a new Credential to an existing DID Document?',
+          okLabel: 'Yes',
+          cancelLabel: 'Cancel',
+        );
+
+        if (result == OkCancelResult.ok) {
+          final vm = await DIDService.to.createNewVM();
+          await RegistryController.to.updateWhoIs(vm: vm ?? VerificationMethod());
+        }
         break;
       case RegistryMethod.DeactivateWhoIs:
-        // TODO: Handle this case.
+        final result = await showOkCancelAlertDialog(
+          context: context,
+          title: 'Deactivate WhoIs?',
+          message: 'WARNING: This will permanently delete the DID Document from the blockchain. Continue?',
+          okLabel: 'Yes',
+          cancelLabel: 'Cancel',
+        );
+
+        if (result == OkCancelResult.ok) {
+          await RegistryController.to.deactivateWhoIs();
+        }
         break;
       case RegistryMethod.BuyAlias:
         final result = await showTextInputDialog(
@@ -67,19 +100,34 @@ class _RegistryEndpoint extends StatelessWidget {
           title: 'Buy Alias',
         );
         if (result != null) {
-          final alias = result[0];
-          final account = BlockchainClient.to.selectedAccount;
-          final resp = await RegistryController.to.buyAlias(MsgBuyAlias(name: alias, creator: account.publicAddress));
-          if (kDebugMode) {
-            print(resp.toString());
-          }
+          await RegistryController.to.buyAlias(alias: result[0]);
         }
         break;
       case RegistryMethod.SellAlias:
-        // TODO: Handle this case.
+        final result = await showTextInputDialog(
+          context: context,
+          textFields: <DialogTextField>[
+            const DialogTextField(hintText: 'Enter Alias'),
+          ],
+          title: 'Sell Alias',
+        );
+        if (result != null) {
+          await RegistryController.to.buyAlias(alias: result[0]);
+        }
         break;
       case RegistryMethod.TransferAlias:
-        // TODO: Handle this case.
+        final result = await showTextInputDialog(
+          context: context,
+          textFields: <DialogTextField>[
+            const DialogTextField(hintText: 'Enter Alias'),
+            const DialogTextField(hintText: 'Enter Current Owner'),
+            const DialogTextField(hintText: 'Enter Amount', keyboardType: TextInputType.number),
+          ],
+          title: 'Transfer Alias',
+        );
+        if (result != null) {
+          await RegistryController.to.transferAlias(alias: result[0], currentOwner: result[1], amount: int.parse(result[2]));
+        }
         break;
     }
   }

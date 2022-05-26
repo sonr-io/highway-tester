@@ -9,8 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biometrics/flutter_biometrics.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:starport_template/api/blockchain_connect.dart';
-import 'package:starport_template/controllers/registry_controller.dart';
 import 'package:starport_template/entities/account_additional_data.dart';
 import 'package:starport_template/entities/import_account_form_data.dart';
 import 'package:starport_template/generated/sonrio.sonr.registry/module/export.dart';
@@ -23,8 +23,6 @@ import 'package:transaction_signing_gateway/transaction_signing_gateway.dart';
 
 class AccountController extends GetxController {
   static AccountController get to => Get.find<AccountController>();
-  static Wallet get wallet => to._wallet;
-  late Wallet _wallet;
   final document = DIDDocument().obs;
   final accountName = ''.obs;
   final isAuthenticated = false.obs;
@@ -57,8 +55,11 @@ class AccountController extends GetxController {
   }
 
   Future<void> backupMnemonicNow(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
     final val = await StarportApp.accountsStore.createMnemonic();
     mnemonic(val);
+    await prefs.setString(accountName.value, val ?? '');
+    await prefs.setString('action', 'Start');
     if (kDebugMode) {
       // ignore: use_build_context_synchronously
       await createAccount(context);
@@ -118,30 +119,9 @@ class AccountController extends GetxController {
       return false;
     }
     accountInfo = info;
-    _wallet = Wallet.derive(mnemonic.value.split(' '), StarportApp.networkInfo);
 
     // Get Token Airdrop
     await BlockchainClient.to.fetchTokens(address: accountInfo.publicAddress);
-
-    // Check if Public Key is set and create DID Document
-    if (publicKey.value.isNotEmpty) {
-      final did = 'did:snr:${info.publicAddress}';
-      final vm = _buildVerificationMethod(baseDid: did);
-      final doc = DIDDocument(
-        context: ['https://www.w3.org/ns/did/v1'],
-        id: did,
-        verificationMethod: [vm],
-        authentication: [vm.id],
-        controller: [did],
-      );
-      final resp = await RegistryController.to.createWhoIs(
-        MsgCreateWhoIs(
-          creator: accountInfo.publicAddress,
-          didDocument: doc.writeToBuffer().toList(),
-          whoisType: WhoIsType.USER,
-        ),
-      );
-    }
 
     // ignore: use_build_context_synchronously
     await Navigator.of(context).pushAndRemoveUntil(
@@ -149,14 +129,5 @@ class AccountController extends GetxController {
       (route) => false,
     );
     return true;
-  }
-
-  VerificationMethod _buildVerificationMethod({required String baseDid}) {
-    return VerificationMethod(
-      id: '$baseDid#${accountName.value}-${Platform.operatingSystem}',
-      type: 'Secp256k1VerificationKey2018',
-      controller: 'did:snr:${accountInfo.publicAddress}',
-      publicKeyBase58: Base58Encode(publicKey.value.toList()),
-    );
   }
 }

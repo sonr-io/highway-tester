@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:grpc/grpc.dart';
 import 'package:starport_template/api/blockchain_connect.dart';
 import 'package:starport_template/controllers/account_controller.dart';
+import 'package:starport_template/controllers/did_service.dart';
 import 'package:starport_template/controllers/registry_controller.dart';
 
 class AppConfig {
@@ -69,6 +70,7 @@ class AppGetBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(BlockchainClient());
+    Get.put(DIDService());
     Get.lazyPut(() => AccountController());
     Get.lazyPut(() => RegistryController());
   }
