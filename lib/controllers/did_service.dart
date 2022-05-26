@@ -61,5 +61,5 @@ class DIDService extends GetxService {
   String get accountName => StarportApp.accountsStore.selectedAccount.name;
 
   // Shortcut Accessors for user did
-  String get accountDid => 'did:snr:$accountAddr';
+  String get accountDid => 'did:snr:${accountAddr.substring(3)}';
 }

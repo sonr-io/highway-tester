@@ -26,12 +26,27 @@ class RegistryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registry Module'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.document_scanner_sharp),
+            onPressed: () => _onPressedAction(context),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: RegistryMethod.values.length,
         itemBuilder: (context, index) => _RegistryEndpoint(method: RegistryMethod.values[index]),
       ),
     );
+  }
+
+  // ignore: avoid_void_async
+  void _onPressedAction(BuildContext context) async {
+    final whoIs = await RegistryController.to.getWhoIs();
+    if (whoIs == null) {
+      return;
+    }
+    await showOkAlertDialog(context: context, title: 'DID Document', message: whoIs.didDocument.writeToJson());
   }
 }
 
@@ -104,15 +119,34 @@ class _RegistryEndpoint extends StatelessWidget {
         }
         break;
       case RegistryMethod.SellAlias:
-        final result = await showTextInputDialog(
+        final whoIs = await RegistryController.to.getWhoIs();
+        if (whoIs == null) {
+          return;
+        }
+        final filteredAlias = whoIs.alias.where((element) => !element.isForSale).toList();
+        final actionLabels = <String>[];
+        actionLabels.addAll(filteredAlias.map((alias) => alias.name));
+
+        final result = await showConfirmationDialog(
+          context: context,
+          actions: List<AlertDialogAction>.generate(actionLabels.length, (index) => AlertDialogAction(label: actionLabels[index], key: index)),
+          title: 'Pick Alias to Sell',
+        );
+        if (result == null) {
+          return;
+        }
+        final amount = await showTextInputDialog(
           context: context,
           textFields: <DialogTextField>[
-            const DialogTextField(hintText: 'Enter Alias'),
+            const DialogTextField(hintText: 'Enter Sell Price', keyboardType: TextInputType.number),
           ],
-          title: 'Sell Alias',
+          title: 'Enter Alias Price',
         );
+        if (amount == null) {
+          return;
+        }
         if (result != null) {
-          await RegistryController.to.buyAlias(alias: result[0]);
+          await RegistryController.to.sellAlias(alias: actionLabels[result], amount: int.parse(amount[0]));
         }
         break;
       case RegistryMethod.TransferAlias:
