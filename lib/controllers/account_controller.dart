@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:alan/alan.dart';
 import 'package:cosmos_auth/cosmos_auth.dart';
-import 'package:fast_base58/fast_base58.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_biometrics/flutter_biometrics.dart';
@@ -19,7 +16,6 @@ import 'package:starport_template/pages/assets/assets_portfolio_page.dart';
 import 'package:starport_template/pages/register/back_up_account_page.dart';
 import 'package:starport_template/pages/register/create_account_page.dart';
 import 'package:starport_template/starport_app.dart';
-import 'package:transaction_signing_gateway/transaction_signing_gateway.dart';
 
 class AccountController extends GetxController {
   static AccountController get to => Get.find<AccountController>();
@@ -29,7 +25,6 @@ class AccountController extends GetxController {
   final mnemonic = ''.obs;
   final index = 0.obs;
   final publicKey = Uint8List(0).obs;
-  late final AccountPublicInfo accountInfo;
 
   bool get isLoading => !isAuthenticated.value || StarportApp.accountsStore.isMnemonicCreating || StarportApp.accountsStore.isAccountImporting;
 
@@ -118,10 +113,9 @@ class AccountController extends GetxController {
     if (info == null) {
       return false;
     }
-    accountInfo = info;
 
     // Get Token Airdrop
-    await BlockchainClient.to.fetchTokens(address: accountInfo.publicAddress);
+    await BlockchainClient.to.fetchTokens(address: info.publicAddress);
 
     // ignore: use_build_context_synchronously
     await Navigator.of(context).pushAndRemoveUntil(
